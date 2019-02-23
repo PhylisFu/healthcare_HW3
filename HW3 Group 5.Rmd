@@ -1,0 +1,6 @@
+---
+title: "HW3 Group5"
+author: "Tianyi Zhou, Mduduzi Langwenya, Shengchen Fu, Yanxi Gao, Lin Wang"
+date: "2/22/2019"
+output: word_document
+---
