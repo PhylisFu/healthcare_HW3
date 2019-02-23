@@ -10,7 +10,6 @@ library(tidyverse)
 library(knitr)
 library(readxl)
 library(readr)
-library(writexl) 
 #load revenue data
 revenue<-read_csv("VTREVCODE16.csv")
 #load ED emergency department data
@@ -22,18 +21,21 @@ inpatient<-read_csv("VTINP16_upd.csv")
 
 ###Question 1
 ####Select main variables from inpatient data to tell the stories
-The storyies of specific patients
+The stories of specific patients
 UNIQ: 507033, 40436, 859382, 1585831, 200760, 3692, 690326
 
 ```{r}
+# change the column Uniq into UNIQ in revenue data
+revenue<-revenue %>% rename(UNIQ=Uniq)
+str(revenue)
 #select Unique number, hospital number, admission type, admission source, age, sex, discharge status, primary payer, charges, diagonosis, procedure and patient days columns in inpatient
 inpatient_q1<-inpatient%>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
 #select same columns in ED
 ED_q1<-ED %>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
 ## We are doing this part in R because the file is big and it is faster to search for the patient in csv
 ## When patient went to ER first, their data can be found in both inpatient and ED data. 
-#select unique number,revenue code, revenue charges, number of revenue units, primary cost center and CPT code columns in revenue
-revenue_q1<-revenue %>% select(UNIQ,REVCODE,REVCHRGS,REVUNITS,PCCR,CPT)
+#select unique number,revenue code, revenue charges, number of revenue units, CPT code columns in revenue
+revenue_q1<-revenue %>% select(UNIQ,REVCODE,REVCHRGS,REVUNITS,CPT)
 
 ```
 
@@ -56,9 +58,11 @@ revenue_q1 %>% filter(UNIQ ==40436) %>% group_by(REVCODE) %>% arrange(desc(REVCH
 
 ```{r}
 #patient 859382
-inpatient_q1 %>%  filter(UNIQ ==859382)
+a<-inpatient_q1 %>%  filter(UNIQ ==859382)
 
-ED_q1 %>% filter(UNIQ ==859382)
+b<-ED_q1 %>% filter(UNIQ ==859382)
+
+diff(a,b)
 
 revenue_q1 %>% filter(UNIQ ==859382) %>% group_by(REVCODE) %>% arrange(desc(REVCHRGS))
 
