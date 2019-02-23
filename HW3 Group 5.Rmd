@@ -10,7 +10,7 @@ library(tidyverse)
 library(knitr)
 library(readxl)
 library(readr)
-library(writexl)
+library(writexl) 
 #load revenue data
 revenue<-read_csv("VTREVCODE16.csv")
 #load ED emergency department data
