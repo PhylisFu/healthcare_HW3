@@ -4,3 +4,35 @@ author: "Tianyi Zhou, Mduduzi Langwenya, Shengchen Fu, Yanxi Gao, Lin Wang"
 date: "2/22/2019"
 output: word_document
 ---
+```{r message=FALSE, warning=FALSE}
+#load packages
+library(tidyverse)
+library(knitr)
+library(readxl)
+library(readr)
+#set working directory
+setwd("~/My_R_Stuff/2019/Healthcare/HW3")
+#load revenue data
+revenue<-read_csv("VTREVCODE16.csv")
+#load ED emergency department data
+ED<- read_csv("VTED16.csv")
+#load inpatient data
+inpatient<-read_csv("VTINP16_upd.csv")
+```
+
+
+###Question 1
+```{r}
+
+```
+
+###Question 2
+```{r}
+
+```
+
+###Question 3
+```{r}
+
+```
+
