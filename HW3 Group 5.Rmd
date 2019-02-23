@@ -10,6 +10,7 @@ library(tidyverse)
 library(knitr)
 library(readxl)
 library(readr)
+library(writexl) 
 #load revenue data
 revenue<-read_csv("VTREVCODE16.csv")
 #load ED emergency department data
@@ -108,7 +109,37 @@ revenue_q1 %>% filter(UNIQ ==690326) %>% group_by(REVCODE) %>% arrange(desc(REVC
 
 ###Question 2
 ```{r}
+#select 3 major insurance payers
+num=c(1,2,6,7)
+inpatient_major = inpatient %>% filter(PPAY%in%num)
+inpatient_major = inpatient_major %>% mutate(Payers = ifelse(PPAY==1,"MEDICARE",
+                                     ifelse(PPAY==2,"MEDICAID","Commercial Payers")))
+#create table
+charge = inpatient_major %>% 
+  group_by(Payers, MDC) %>% 
+  summarise(Charges=round(sum(CHRGS)/1000000)) %>% 
+  drop_na() #drop the rows where at least one column contains NA
+xtabs(Charges ~ Payers + MDC, data = charge)
 
+#age and sex for major payers
+sex = inpatient_major %>% 
+  group_by(Payers, sex) %>% 
+  summarise(number=n()) %>% 
+  drop_na()
+age = inpatient_major %>% 
+  group_by(Payers, intage) %>% 
+  summarise(number=n()) %>% 
+  drop_na()
+age_sex = inpatient_major %>% 
+  group_by(Payers, intage, sex) %>% 
+  summarise(number=n()) %>% 
+  drop_na()
+
+#export data for piechart and tables
+write_xlsx(x = charge, path = "charge.xlsx", col_names = TRUE)
+write_xlsx(x = sex, path = "sex.xlsx", col_names = TRUE)
+write_xlsx(x = age, path = "age.xlsx", col_names = TRUE)
+write_xlsx(x = age_sex, path = "age_sex.xlsx", col_names = TRUE)
 ```
 
 ###Question 3
