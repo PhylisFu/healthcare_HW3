@@ -26,7 +26,7 @@ The storyies of specific patients
 UNIQ: 507033, 40436, 859382, 1585831, 200760, 3692, 690326
 
 ```{r}
-#select hospital number, admission type, admission source, age, sex, discharge status, primary payer, charges, diagonosis, procedure and patient days columns in inpatient
+#select Unique number, hospital number, admission type, admission source, age, sex, discharge status, primary payer, charges, diagonosis, procedure and patient days columns in inpatient
 inpatient_q1<-inpatient%>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
 #select same columns in ED
 ED_q1<-ED %>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
