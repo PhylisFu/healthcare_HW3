@@ -58,11 +58,9 @@ revenue_q1 %>% filter(UNIQ ==40436) %>% group_by(REVCODE) %>% arrange(desc(REVCH
 
 ```{r}
 #patient 859382
-a<-inpatient_q1 %>%  filter(UNIQ ==859382)
+inpatient_q1 %>%  filter(UNIQ ==859382)
 
-b<-ED_q1 %>% filter(UNIQ ==859382)
-
-diff(a,b)
+ED_q1 %>% filter(UNIQ ==859382)
 
 revenue_q1 %>% filter(UNIQ ==859382) %>% group_by(REVCODE) %>% arrange(desc(REVCHRGS))
 
