@@ -149,10 +149,46 @@ code = c("T40","T41","T42","T43")
 drug_abuse<-ED %>% filter_at(vars(starts_with("DX")), any_vars(str_sub(., 1, 3) %in% code))
 ```
 
--	How many ED visits exactly have been diagnosed as drug user/abuser? 
--	There is a myth that the drug use/abuse has been a male problem and that women have much better protection measures to stay away from drug use/abuse let alone overdoses severe enough that lead to an ED admission. Can you check if your data supports this gender bias myth?  
--	Tens of millions of dollars reportedly were spent on drug use related cases that year alone. Can you find the exact dollar amount for your identified patients? Of the three insurances in Question 1, what was share of each of the total payments?
--	Recent breakthroughs in the dark side of chemistry of drug development have done nothing but damage to humanity. The use of synthetic narcotics is rising alarmingly in part due to the marketing campaign for such meds. On the other front the public is ill informed of the danger of those new generation of lab created drugs that are supposedly improving brain’s performance (read more here or here). Use the ICD-10 codes of T404xxx and T4362xx to identify only a small sample of such patients. How many of patients have been brought to ED for diagnosis related to synthetic narcotics or amphetamines? 
--	Name the 3 zip code regions with the highest rate of drug use/abuse. 
--	What are the 10 most common diagnoses of drug use/abuse?
+* 1 -	How many ED visits exactly have been diagnosed as drug user/abuser? 
+
+```{r}
+length(unique(drug_abuse$UNIQ))
+
+```
+
+* 2 -	There is a myth that the drug use/abuse has been a male problem and that women have much better protection measures to stay away from drug use/abuse let alone overdoses severe enough that lead to an ED admission. Can you check if your data supports this gender bias myth?  
+```{r}
+drug_abuse %>% group_by(sex) %>% summarise(n=n())
+```
+
+
+* 3-	Tens of millions of dollars reportedly were spent on drug use related cases that year alone. Can you find the exact dollar amount for your identified patients? Of the three insurances in Question 1, what was share of each of the total payments?
+```{r}
+sum(drug_abuse$CHRGS)
+
+num=c(1,2,6,7)
+drug_abuse_major = drug_abuse %>% filter(PPAY%in%num)
+drug_abuse_major = drug_abuse_major %>% mutate(Payers = ifelse(PPAY==1,"MEDICARE",
+                                     ifelse(PPAY==2,"MEDICAID","Commercial Payers")))
+drug_abuse_major %>% group_by(Payers) %>% summarise(sum=sum(CHRGS),ratio=sum/30741220)
+```
+
+* 4-	Recent breakthroughs in the dark side of chemistry of drug development have done nothing but damage to humanity. The use of synthetic narcotics is rising alarmingly in part due to the marketing campaign for such meds. On the other front the public is ill informed of the danger of those new generation of lab created drugs that are supposedly improving brain’s performance (read more here or here). Use the ICD-10 codes of T404xxx and T4362xx to identify only a small sample of such patients. How many of patients have been brought to ED for diagnosis related to synthetic narcotics or amphetamines? 
+```{r}
+syn_narco<-drug_abuse %>% filter_at(vars(starts_with("DX")), any_vars(str_detect(., "^T404")|str_detect(.,"^T4362")))
+```
+
+
+* 5-	Name the 3 zip code regions with the highest rate of drug use/abuse. 
+```{r}
+drug_abuse %>% group_by(TXTZIP) %>% summarise(n=n()) %>% arrange(desc(n)) %>% top_n(3)
+```
+
+* 6-	What are the 10 most common diagnoses of drug use/abuse?
+
+```{r}
+code = c("T40","T41","T42","T43")
+data<-data.frame(drug_abuse[,10:29])
+list<-data %>% gather(key,value) %>% group_by(value) %>% tally  %>% filter(str_sub(value, 1, 3) %in% code) %>% arrange(desc(n)) %>% top_n(10)
+```
 
