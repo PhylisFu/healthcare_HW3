@@ -10,6 +10,7 @@ library(tidyverse)
 library(knitr)
 library(readxl)
 library(readr)
+library(writexl)
 #load revenue data
 revenue<-read_csv("VTREVCODE16.csv")
 #load ED emergency department data
@@ -28,10 +29,10 @@ UNIQ: 507033, 40436, 859382, 1585831, 200760, 3692, 690326
 # change the column Uniq into UNIQ in revenue data
 revenue<-revenue %>% rename(UNIQ=Uniq)
 str(revenue)
-#select Unique number, hospital number, admission type, admission source, age, sex, discharge status, primary payer, charges, diagonosis, procedure and patient days columns in inpatient
-inpatient_q1<-inpatient%>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
+#select Unique number, hospital number, admission type, admission source, age, sex, discharge status, primary payer, charges, diagnosis, procedure and patient days columns in inpatient
+inpatient_q1<-inpatient%>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,DX6,DX7,DX8,PX1,PX2,PX3,pdays) 
 #select same columns in ED
-ED_q1<-ED %>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,PX1,PX2,PX3,pdays) 
+ED_q1<-ED %>% select (UNIQ,hnum2,ATYPE,asour,intage,sex,dstat,PPAY,CHRGS,DX1,DX2,DX3,DX4,DX5,DX6,DX7,DX8,PX1,PX2,PX3,pdays) 
 ## We are doing this part in R because the file is big and it is faster to search for the patient in csv
 ## When patient went to ER first, their data can be found in both inpatient and ED data. 
 #select unique number,revenue code, revenue charges, number of revenue units, CPT code columns in revenue
@@ -142,6 +143,7 @@ write_xlsx(x = charge, path = "charge.xlsx", col_names = TRUE)
 write_xlsx(x = sex, path = "sex.xlsx", col_names = TRUE)
 write_xlsx(x = age, path = "age.xlsx", col_names = TRUE)
 write_xlsx(x = age_sex, path = "age_sex.xlsx", col_names = TRUE)
+write_xlsx(x)
 ```
 
 ###Question 3
