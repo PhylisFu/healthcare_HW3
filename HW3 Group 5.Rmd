@@ -122,7 +122,11 @@ charge = inpatient_major %>%
   group_by(Payers, MDC) %>% 
   summarise(Charges=round(sum(CHRGS)/1000000)) %>% 
   drop_na() #drop the rows where at least one column contains NA
-xtabs(Charges ~ Payers + MDC, data = charge)
+cross_tab<-xtabs(Charges ~ Payers + MDC, data = charge)
+cross_tab<-as.data.frame.matrix(cross_tab)
+
+
+
 
 #age and sex for major payers
 sex = inpatient_major %>% 
@@ -143,7 +147,7 @@ write_xlsx(x = charge, path = "charge.xlsx", col_names = TRUE)
 write_xlsx(x = sex, path = "sex.xlsx", col_names = TRUE)
 write_xlsx(x = age, path = "age.xlsx", col_names = TRUE)
 write_xlsx(x = age_sex, path = "age_sex.xlsx", col_names = TRUE)
-write_xlsx(x)
+write_xlsx(x = cross_tab, path = "cross_tab", col_names = TRUE)
 ```
 
 ###Question 3
@@ -162,7 +166,7 @@ length(unique(drug_abuse$UNIQ))
 
 * 2 -	There is a myth that the drug use/abuse has been a male problem and that women have much better protection measures to stay away from drug use/abuse let alone overdoses severe enough that lead to an ED admission. Can you check if your data supports this gender bias myth?  
 ```{r}
-drug_abuse %>% group_by(sex) %>% summarise(n=n())
+drug_abuse %>% group_by(sex) %>% summarise(n=n()) %>%drop_na()
 ```
 
 
@@ -190,9 +194,12 @@ drug_abuse %>% group_by(TXTZIP) %>% summarise(n=n()) %>% arrange(desc(n)) %>% to
 
 * 6-	What are the 10 most common diagnoses of drug use/abuse?
 
+
 ```{r}
 code = c("T40","T41","T42","T43")
 data<-data.frame(drug_abuse[,10:29])
-list<-data %>% gather(key,value) %>% group_by(value) %>% tally  %>% filter(str_sub(value, 1, 3) %in% code) %>% arrange(desc(n)) %>% top_n(10)
+list<-data %>% gather(key,value) %>% group_by(value) %>% tally  %>% filter(str_sub(value, 1, 3) %in% code) %>% arrange(desc(n)) 
+list<-list %>% top_n(10)
 ```
+
 
