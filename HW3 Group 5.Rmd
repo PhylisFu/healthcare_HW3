@@ -195,11 +195,11 @@ drug_abuse %>% group_by(TXTZIP) %>% summarise(n=n()) %>% arrange(desc(n)) %>% to
 * 6-	What are the 10 most common diagnoses of drug use/abuse?
 
 
-```{r}
+```{r message=TRUE, warning=TRUE}
 code = c("T40","T41","T42","T43")
 data<-data.frame(drug_abuse[,10:29])
 list<-data %>% gather(key,value) %>% group_by(value) %>% tally  %>% filter(str_sub(value, 1, 3) %in% code) %>% arrange(desc(n)) 
-list<-list %>% top_n(10)
+list %>% top_n(10)
 ```
 
 
